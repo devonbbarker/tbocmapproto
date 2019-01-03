@@ -22,8 +22,8 @@
     var map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/devonbbarker/cjqekrxsodi4w2snowg8yb0ku',
-	center: [-104.965300, 39.734800],
-	zoom: 8.0
+		center: [-104.965300, 39.734800],
+		zoom: 8.0
 });
 
 var nav = new mapboxgl.NavigationControl();
@@ -37,12 +37,33 @@ map.on('load', function() {
         type: "geojson",
         // Point to GeoJSON data.
         data: "https://devonbbarker.github.io/tbocmapproto/tbocproperties.geojson",
-        cluster: true,
-        clusterMaxZoom: 14, // Max zoom to cluster points on
-		clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
+       cluster: true, // Enable clustering
+        clusterRadius: 50, // Radius of each cluster when clustering points
+        clusterMaxZoom: 6 // Max zoom to cluster points on
 
+// Create a popup, but don't add it to the map yet.
+        var popup = new mapboxgl.Popup({
+            closeButton: false,
+            closeOnClick: false
+        });
+        
+        map.on('mouseenter', 'house', function(e) {
+            // Change the cursor style as a UI indicator.
+            map.getCanvas().style.cursor = 'pointer';
 
-});		
+            // Populate the popup and set its coordinates
+            // based on the feature found.
+            popup.setLngLat(e.features[0].geometry.coordinates)
+                .setHTML(e.features[0].properties.title)
+                .addTo(map);
+        });
+
+        map.on('mouseleave', 'house', function() {
+            map.getCanvas().style.cursor = '';
+            popup.remove();
+        });    
+    
+});
 		
             map.addLayer({
                 id: 'house',
