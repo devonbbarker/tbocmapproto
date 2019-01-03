@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'/>
+    <title>Airport Explorer</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no'/>
+   <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.css' rel='stylesheet' />
+    
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
+    </style>
+</head>
+
+<body>
+<div id='map'></div>
+
+
+<script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZGV2b25iYmFya2VyIiwiYSI6ImUwYTA3NzI5MmE2MjYwMjIzNmQ3N2Y2MGZhNzc5MmJkIn0.W59D0K_bqKsnFiXeRrCi3Q';
+    var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/devonbbarker/cjqekrxsodi4w2snowg8yb0ku',
+	center: [-104.965300, 39.734800],
+	zoom: 8.0
+});
+
+var nav = new mapboxgl.NavigationControl();
+map.addControl(nav, 'bottom-right');
+
+
+map.on('load', function() {
+    // Add a new source from our GeoJSON data and set the
+    // 'cluster' option to true. GL-JS will add the point_count property to your source data.
+    map.addSource("houses", {
+        type: "geojson",
+        // Point to GeoJSON data.
+        data: "https://github.com/devonbbarker/tbocprototype/blob/master/tbocproperties.geojson",
+        cluster: true,
+        clusterMaxZoom: 14, // Max zoom to cluster points on
+		clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
+
+
+});		
+		
+            map.addLayer({
+                id: 'house',
+                type: 'circle',
+                source: 'houses',
+                filter: ['!has', 'point_count'],
+                paint: {
+                    'circle-color': '#1EF008',
+                    'circle-radius': 6,
+                    'circle-stroke-width': 1,
+                    'circle-stroke-color': '#fff'
+                }
+            });
+        });
+</script>
+</body>
+</html>
