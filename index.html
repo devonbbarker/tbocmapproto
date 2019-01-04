@@ -75,6 +75,13 @@
             popup.remove();
         });
 
+// Center the map on the coordinates of any clicked symbol from the 'symbols' layer.
+    map.on('click', 'house', function (e) {
+        map.flyTo({center: e.features[0].geometry.coordinates});
+    });
+
+
+
         map.addLayer({
             id: 'house',
             type: 'circle',
