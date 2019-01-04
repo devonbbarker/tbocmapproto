@@ -1,85 +1,100 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta charset='utf-8'/>
+    <meta charset='utf-8' />
     <title>Airport Explorer</title>
-    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no'/>
-   <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.js'></script>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.css' rel='stylesheet' />
-    
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
     <style>
-        body { margin:0; padding:0; }
-        #map { position:absolute; top:0; bottom:0; width:100%; }
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
     </style>
 </head>
 
 <body>
-<div id='map'></div>
+    <div id='map'></div>
 
 
-<script>
-    mapboxgl.accessToken = 'pk.eyJ1IjoiZGV2b25iYmFya2VyIiwiYSI6ImUwYTA3NzI5MmE2MjYwMjIzNmQ3N2Y2MGZhNzc5MmJkIn0.W59D0K_bqKsnFiXeRrCi3Q';
-    var map = new mapboxgl.Map({
-        container: 'map',
-        style: 'mapbox://styles/devonbbarker/cjqekrxsodi4w2snowg8yb0ku',
-		center: [-104.965300, 39.734800],
-		zoom: 8.0
-});
-
-var nav = new mapboxgl.NavigationControl();
-map.addControl(nav, 'bottom-right');
-
-
-map.on('load', function() {
-    // Add a new source from our GeoJSON data and set the
-    // 'cluster' option to true. GL-JS will add the point_count property to your source data.
-    map.addSource("houses", {
-        type: "geojson",
-        // Point to GeoJSON data.
-        data: "https://devonbbarker.github.io/tbocmapproto/tbocproperties.geojson",
-       cluster: true, // Enable clustering
-        clusterRadius: 50, // Radius of each cluster when clustering points
-        clusterMaxZoom: 6 // Max zoom to cluster points on
-        
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoiZGV2b25iYmFya2VyIiwiYSI6ImUwYTA3NzI5MmE2MjYwMjIzNmQ3N2Y2MGZhNzc5MmJkIn0.W59D0K_bqKsnFiXeRrCi3Q';
+        var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/devonbbarker/cjqekrxsodi4w2snowg8yb0ku',
+            center: [-104.965300, 39.734800],
+            zoom: 8.0
         });
 
-// Create a popup, but don't add it to the map yet.
-        var popup = new mapboxgl.Popup({
-            closeButton: false,
-            closeOnClick: false
-        });
-        
-        map.on('mouseenter', 'house', function(e) {
+        var nav = new mapboxgl.NavigationControl();
+        map.addControl(nav, 'bottom-right');
+
+
+        map.on('load', function() {
+            // Add a new source from our GeoJSON data and set the
+            // 'cluster' option to true. GL-JS will add the point_count property to your source data.
+            map.addSource("houses", {
+                type: "geojson",
+                // Point to GeoJSON data.
+                data: "https://devonbbarker.github.io/tbocmapproto/tbocproperties.geojson",
+
+  		});
+
+            // Create a popup, but don't add it to the map yet.
+            var popup = new mapboxgl.Popup({
+                closeButton: false,
+                closeOnClick: false
+            });
+            
+            map.on('mouseenter', 'house', function(e) {
             // Change the cursor style as a UI indicator.
             map.getCanvas().style.cursor = 'pointer';
-
+	
+        var popupHtml = ('<h3>' + e.features[0].properties.title + '</h3><p>' + e.features[0].properties.address + '</p><p>' + e.features[0].properties.city + '&nbsp;' + e.features[0].properties.state + ',&nbsp;' + e.features[0].properties.zip + '</p>')
+        
             // Populate the popup and set its coordinates
             // based on the feature found.
             popup.setLngLat(e.features[0].geometry.coordinates)
-                .setHTML(e.features[0].properties.title)
+                .setHTML(popupHtml)
                 .addTo(map);
         });
 
         map.on('mouseleave', 'house', function() {
             map.getCanvas().style.cursor = '';
             popup.remove();
-        });    
-    
-});
-		
-            map.addLayer({
-                id: 'house',
-                type: 'circle',
-                source: 'houses',
-                filter: ['!has', 'point_count'],
-                paint: {
-                    'circle-color': '#1EF008',
-                    'circle-radius': 6,
-                    'circle-stroke-width': 1,
-                    'circle-stroke-color': '#fff'
-                });
+        });
+
+        map.addLayer({
+            id: 'house',
+            type: 'circle',
+            source: 'houses',
+            filter: ['!has', 'point_count'],
+            paint: {
+                'circle-color': '#1EF008',
+                'circle-radius': 6,
+                'circle-stroke-width': 1,
+                'circle-stroke-color': '#fff'
+            }
+        
+    });
 });
 
-</script>
+
+        
+        
+        
+    </script>
 </body>
+
 </html>
