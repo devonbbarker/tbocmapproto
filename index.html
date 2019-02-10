@@ -42,8 +42,8 @@
 
 
         map.on('load', function() {
-            // Add a new source from our GeoJSON data and set the
-            // 'cluster' option to true. GL-JS will add the point_count property to your source data.
+// Add a new source from our GeoJSON data and set the
+// 'cluster' option to true. GL-JS will add the point_count property to your source data.
             map.addSource("houses", {
                 type: "geojson",
                 // Point to GeoJSON data.
@@ -63,8 +63,8 @@
 	
         var popupHtml = ('<h3>' + e.features[0].properties.title + '</h3><p>' + e.features[0].properties.address + '</p><p>' + e.features[0].properties.city + '&nbsp;' + e.features[0].properties.state + ',&nbsp;' + e.features[0].properties.zip + '</p>')
         
-            // Populate the popup and set its coordinates
-            // based on the feature found.
+// Populate the popup and set its coordinates
+// based on the feature found.
             popup.setLngLat(e.features[0].geometry.coordinates)
                 .setHTML(popupHtml)
                 .addTo(map);
@@ -75,10 +75,13 @@
             popup.remove();
         });
 
+
 // Center the map on the coordinates of any clicked symbol from the 'symbols' layer.
     map.on('click', 'house', function (e) {
         map.flyTo({center: e.features[0].geometry.coordinates});
-    });
+        
+    	
+    	});
 
 
 
@@ -99,7 +102,8 @@
 
 
         
-        
+// disable map zoom when using scroll
+		map.scrollZoom.disable();        
         
     </script>
 </body>
